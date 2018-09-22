@@ -1,8 +1,10 @@
 import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
-import Bookshelf from './Bookshelf'
 import Home from './Home'
+import { Route } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+
 
 class BooksApp extends React.Component {
   state = {
@@ -13,8 +15,45 @@ class BooksApp extends React.Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
+    booksAPIQuery:[],
     showSearchPage: false
   }
+  updateState = () => {
+    BooksAPI.getAll().then((queryBooks) => {
+      this.setState({ queryBooks })
+      console.log('State is updated: ', this.state.queryBooks)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  updateBookShelf = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((response) => {
+      console.log('response: ', response)
+      this.updateState()
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  updateBookShelfFromSearchPage = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((response) => {
+      console.log('response 2: ', response)
+      this.updateState()
+    }).catch((error) => {
+      console.log(error)
+    })
+    this.props.history.push('/')
+  }
+
+   componentDidMount() {
+    BooksAPI.getAll().then((booksAPIQuery) => {
+
+      this.setState({ booksAPIQuery })
+      console.log(booksAPIQuery);
+    }).catch((error) => {
+      console.log(error)
+    })}
 
   render() {
     return (
@@ -41,8 +80,21 @@ class BooksApp extends React.Component {
             </div>
           </div>
         ) : (
-         <Home/>
+          <Route exact path='/' render={
+            ()=> 
+            ( <Home 
+            booksAPIQuery = {this.state}
+            moveToShelf={this.updateBookShelf}
+
+            />
+            
+            )
+            
+          }
+          
+            />     
         )}
+
       </div>
     )
   }
