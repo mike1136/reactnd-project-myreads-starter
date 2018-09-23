@@ -1,6 +1,11 @@
 import React,{Component} from 'react'
-import ReactDom from 'react-dom'
 import Book from './Book'
+/**
+ *Individual bookshelf.Organize the books.
+ *
+ * @class BookShelf
+ * @extends {Component}
+ */
 class BookShelf extends Component
 {
     render(){
@@ -13,11 +18,9 @@ class BookShelf extends Component
                     <ol className="books-grid">
                       {books.map((book) =>
                       <li key={book.id}>
-                      <Book bookDetails={book} moveToShelf={moveToShelf}/> 
+                      <Book bookDetails={book} moveToShelf={moveToShelf} /> 
                       </li>)
-                      
                       }
-              
                     </ol>
                   </div>
                 </div>)
